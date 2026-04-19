@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.moduloproducto.Repository;
+package com.proyectotienda.repository;
 
-import com.mycompany.moduloproducto.Model.Producto;
+import com.proyectotienda.model.Producto;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,5 +27,18 @@ public class ProductoRepository implements IProductoRepository{
     @Override
     public List<Producto> getAllProductos() {
         return new ArrayList<>(productos);
+    }
+
+    @Override
+    public Producto getProductoByCodigo(String codigo) {
+        return productos.stream()
+                .filter(p -> p.getCodigo().equals(codigo))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void deleteByCodigo(String codigo) {
+        productos.removeIf(p -> p.getCodigo().equals(codigo));
     }
 } 

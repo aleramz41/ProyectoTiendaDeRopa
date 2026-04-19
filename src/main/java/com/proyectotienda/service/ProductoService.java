@@ -5,7 +5,8 @@
 package com.proyectotienda.service;
 
 import com.proyectotienda.model.Producto;
-import java.util.ArrayList;
+import com.proyectotienda.repository.IProductoRepository;
+import com.proyectotienda.repository.ProductoRepository;
 import java.util.List;
 
 /**
@@ -13,10 +14,10 @@ import java.util.List;
  * @author aleja
  */
 public class ProductoService {
-    private final List<Producto> productos;
+    private final IProductoRepository productoRepository;
 
-    public ProductoService() {
-        this.productos = new ArrayList<>();
+    public ProductoService(IProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
     }
 
     public void registrarProducto(String codigo, String nombre, String talla, String color, double precio, int stock) {
@@ -37,18 +38,15 @@ public class ProductoService {
         }
 
         Producto producto = new Producto(codigo, nombre, talla, color, precio, stock);
-        productos.add(producto);
+        productoRepository.save(producto);
     }
 
     public List<Producto> getAllProductos() {
-        return new ArrayList<>(productos);
+        return productoRepository.getAllProductos();
     }
 
     public Producto getProductoByCodigo(String codigo) {
-        return productos.stream()
-                        .filter(p -> p.getCodigo().equals(codigo))
-                        .findFirst()
-                        .orElse(null);
+        return productoRepository.getProductoByCodigo(codigo);
     }
 
     public void actualizarProducto(String codigo, String nombre, String talla, String color, double precio, int stock) {
@@ -65,7 +63,7 @@ public class ProductoService {
     }
 
     public void eliminarProducto(String codigo) {
-        productos.removeIf(p -> p.getCodigo().equals(codigo));
+        productoRepository.deleteByCodigo(codigo);
     }
 
     public void descontarStock(String codigo, int cantidad) {
