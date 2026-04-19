@@ -1,0 +1,83 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.proyectotienda.service;
+
+import com.proyectotienda.model.Producto;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author aleja
+ */
+public class ProductoService {
+    private final List<Producto> productos;
+
+    public ProductoService() {
+        this.productos = new ArrayList<>();
+    }
+
+    public void registrarProducto(String codigo, String nombre, String talla, String color, double precio, int stock) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código es obligatorio.");
+        }
+        
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio.");
+        }
+        
+        if (precio < 0) {
+            throw new IllegalArgumentException("El precio no puede ser negativo.");
+        }
+        
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo.");
+        }
+
+        Producto producto = new Producto(codigo, nombre, talla, color, precio, stock);
+        productos.add(producto);
+    }
+
+    public List<Producto> getAllProductos() {
+        return new ArrayList<>(productos);
+    }
+
+    public Producto getProductoByCodigo(String codigo) {
+        return productos.stream()
+                        .filter(p -> p.getCodigo().equals(codigo))
+                        .findFirst()
+                        .orElse(null);
+    }
+
+    public void actualizarProducto(String codigo, String nombre, String talla, String color, double precio, int stock) {
+        Producto producto = getProductoByCodigo(codigo);
+        if (producto == null) {
+            throw new IllegalArgumentException("Producto con código " + codigo + " no encontrado.");
+        }
+
+        producto.setNombre(nombre);
+        producto.setTalla(talla);
+        producto.setColor(color);
+        producto.setPrecio(precio);
+        producto.setStock(stock);
+    }
+
+    public void eliminarProducto(String codigo) {
+        productos.removeIf(p -> p.getCodigo().equals(codigo));
+    }
+
+    public void descontarStock(String codigo, int cantidad) {
+        Producto producto = getProductoByCodigo(codigo);
+        if (producto == null) {
+            throw new IllegalArgumentException("Producto con código " + codigo + " no encontrado.");
+        }
+        
+        if (producto.getStock() < cantidad) {
+            throw new IllegalArgumentException("Stock insuficiente para el producto: " + producto.getNombre());
+        }
+        
+        producto.setStock(producto.getStock() - cantidad);
+    }
+}
