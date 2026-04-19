@@ -26,6 +26,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel clientesTableModel;
     private javax.swing.table.DefaultTableModel ventasTableModel;
     private int contadorVenta = 1;
+    // Servicio para clientes
+    private final ClienteService clienteService = new ClienteService(new ClienteRepository());
     /**
      * Creates new form MainWindow
      */
@@ -275,6 +277,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnGuardarClientes.addActionListener(this::btnGuardarClientesActionPerformed);
 
         btnActualizarClientes.setText("Actualizar");
+        btnActualizarClientes.addActionListener(this::btnActualizarClientesActionPerformed);
 
         btnEliminarClientes.setText("Eliminar");
         btnEliminarClientes.addActionListener(this::btnEliminarClientesActionPerformed);
@@ -566,6 +569,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event-btnGuardarProductosActionPerformed
 
+
     private void btnEliminarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnEliminarProductosActionPerformed
         // Eliminar producto seleccionado
         int fila = tablaProductos.getSelectedRow();
@@ -576,9 +580,54 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event-btnEliminarProductosActionPerformed
 
-    private void btnActualizarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnActualizarProductosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event-btnActualizarProductosActionPerformed
+    private void btnActualizarProductosActionPerformed(java.awt.event.ActionEvent evt) {
+        // Actualizar producto seleccionado
+        int fila = tablaProductos.getSelectedRow();
+        if (fila >= 0 && fila < listaProductos.size()) {
+            try {
+                String codigo = txtCodigo.getText().trim();
+                String nombre = txtNombreProductos.getText().trim();
+                String talla = txtTalla.getText().trim();
+                String color = txtColor.getText().trim();
+                double precio = Double.parseDouble(txtPrecio.getText().trim());
+                int stock = Integer.parseInt(txtCantidad.getText().trim());
+                if (codigo.isEmpty() || nombre.isEmpty()) return;
+                Producto actualizado = new Producto();
+                actualizado.setCodigo(codigo);
+                actualizado.setNombre(nombre);
+                actualizado.setTalla(talla);
+                actualizado.setColor(color);
+                actualizado.setPrecio(precio);
+                actualizado.setStock(stock);
+                listaProductos.set(fila, actualizado);
+                actualizarTablaProductos();
+                limpiarCamposProducto();
+            } catch (NumberFormatException e) {
+                // Ignorar entrada inválida
+            }
+        }
+    }
+
+
+    private void btnActualizarClientesActionPerformed(java.awt.event.ActionEvent evt) {
+        // Actualizar cliente seleccionado usando ClienteService
+        int fila = tablaClientes.getSelectedRow();
+        if (fila >= 0 && fila < listaClientes.size()) {
+            try {
+                int id = Integer.parseInt(txtId.getText().trim());
+                String nombre = txtNombreCliente.getText().trim();
+                String email = txtEmail.getText().trim();
+                String telefono = txtTelefono.getText().trim();
+                clienteService.actualizarCliente(id, nombre, email, telefono);
+                // Actualizar la lista local para reflejar los cambios
+                listaClientes.set(fila, new Cliente(id, nombre, email, telefono));
+                actualizarTablaClientes();
+                limpiarCamposCliente();
+            } catch (NumberFormatException e) {
+                // Ignorar entrada inválida
+            }
+        }
+    }
 
     private void txtColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-txtColorActionPerformed
         // TODO add your handling code here:

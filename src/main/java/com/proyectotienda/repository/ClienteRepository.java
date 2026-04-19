@@ -28,4 +28,14 @@ public class ClienteRepository implements IClienteRepository{
     public List<Cliente> getAllClients() {
         return new ArrayList<>(clients);
     }
+
+    @Override
+    public void actualizarCliente(Cliente cliente) {
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i).getId() == cliente.getId()) {
+                clients.set(i, cliente);
+                return;
+            }
+        }
+    }
 }
