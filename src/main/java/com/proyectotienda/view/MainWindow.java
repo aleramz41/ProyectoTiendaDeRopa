@@ -58,6 +58,19 @@ public class MainWindow extends javax.swing.JFrame {
         };
         tablaClientes.setModel(clientesTableModel);
         actualizarTablaClientes();
+        // Evento: llenar campos al seleccionar una fila de la tabla de clientes
+        tablaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = tablaClientes.getSelectedRow();
+                if (fila >= 0 && fila < listaClientes.size()) {
+                    Cliente c = listaClientes.get(fila);
+                    txtId.setText(String.valueOf(c.getId()));
+                    txtNombreCliente.setText(c.getNombre());
+                    txtEmail.setText(c.getEmail());
+                    txtTelefono.setText(c.getTelefono());
+                }
+            }
+        });
         // Configurar modelo de tabla para ventas
         ventasTableModel = new javax.swing.table.DefaultTableModel(
             new Object[][]{},
@@ -517,32 +530,34 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnGuardarClientesActionPerformed
-        // Agregar cliente de forma básica
+    private void btnGuardarClientesActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             int id = Integer.parseInt(txtId.getText().trim());
             String nombre = txtNombreCliente.getText().trim();
             String email = txtEmail.getText().trim();
             String telefono = txtTelefono.getText().trim();
-            if (nombre.isEmpty()) return;
-            Cliente nuevo = new Cliente(id, nombre, email, telefono);
-            listaClientes.add(nuevo);
+            if (nombre.isEmpty() || email.isEmpty()) return;
+            clienteService.registrarCliente(id, nombre, email, telefono);
+            listaClientes = clienteService.getAllClients();
             actualizarTablaClientes();
             limpiarCamposCliente();
         } catch (NumberFormatException e) {
-            // Ignorar entrada inválida
+        // Ignorar entrada inválida
+        } catch (IllegalArgumentException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event-btnGuardarClientesActionPerformed
+    }
 
-    private void btnEliminarClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnEliminarClientesActionPerformed
-        // Eliminar cliente seleccionado
+    private void btnEliminarClientesActionPerformed(java.awt.event.ActionEvent evt) {
         int fila = tablaClientes.getSelectedRow();
-        if (fila >= 0 && fila < listaClientes.size()) {
-            listaClientes.remove(fila);
-            actualizarTablaClientes();
-            limpiarCamposCliente();
-        }
-    }//GEN-LAST:event-btnEliminarClientesActionPerformed
+        if (fila < 0 || fila >= listaClientes.size()) return;
+        
+        Cliente c = listaClientes.get(fila);
+        clienteService.eliminarCliente(c.getId());
+        listaClientes = clienteService.getAllClients();
+        actualizarTablaClientes();
+        limpiarCamposCliente();
+    }
 
     private void btnGuardarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnGuardarProductosActionPerformed
         // Agregar producto de forma básica
@@ -610,22 +625,21 @@ public class MainWindow extends javax.swing.JFrame {
 
 
     private void btnActualizarClientesActionPerformed(java.awt.event.ActionEvent evt) {
-        // Actualizar cliente seleccionado usando ClienteService
         int fila = tablaClientes.getSelectedRow();
-        if (fila >= 0 && fila < listaClientes.size()) {
-            try {
-                int id = Integer.parseInt(txtId.getText().trim());
-                String nombre = txtNombreCliente.getText().trim();
-                String email = txtEmail.getText().trim();
-                String telefono = txtTelefono.getText().trim();
-                clienteService.actualizarCliente(id, nombre, email, telefono);
-                // Actualizar la lista local para reflejar los cambios
-                listaClientes.set(fila, new Cliente(id, nombre, email, telefono));
-                actualizarTablaClientes();
-                limpiarCamposCliente();
-            } catch (NumberFormatException e) {
-                // Ignorar entrada inválida
-            }
+        if (fila < 0 || fila >= listaClientes.size()) return;
+        try {
+            int id = Integer.parseInt(txtId.getText().trim());
+            String nombre = txtNombreCliente.getText().trim();
+            String email = txtEmail.getText().trim();
+            String telefono = txtTelefono.getText().trim();
+            clienteService.actualizarCliente(id, nombre, email, telefono);
+            listaClientes = clienteService.getAllClients();
+            actualizarTablaClientes();
+            limpiarCamposCliente();
+        } catch (NumberFormatException e) {
+        // Ignorar entrada inválida
+        } catch (IllegalArgumentException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
 

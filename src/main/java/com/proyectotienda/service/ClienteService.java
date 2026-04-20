@@ -4,7 +4,6 @@
     import java.util.List;
 
     import com.proyectotienda.model.Cliente;
-    import com.proyectotienda.repository.ClienteRepository;
     import com.proyectotienda.repository.IClienteRepository;
 
     /**
@@ -14,7 +13,7 @@
     public class ClienteService {
         private final IClienteRepository clienteRepository;
 
-        public ClienteService(ClienteRepository clienteRepository) {
+        public ClienteService(IClienteRepository clienteRepository) {
             this.clienteRepository = clienteRepository;
         }
 
@@ -41,7 +40,9 @@
             Cliente cliente = new Cliente(id, nombre, email, telefono);
             clienteRepository.actualizarCliente(cliente);
         }
-
+        public void eliminarCliente(int id) {
+            clienteRepository.eliminarCliente(id);
+        }
         public List<Cliente> getAllClients() {
             return clienteRepository.getAllClients();
         }

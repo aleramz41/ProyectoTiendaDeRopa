@@ -38,4 +38,8 @@ public class ClienteRepository implements IClienteRepository{
             }
         }
     }
+    @Override
+    public void eliminarCliente(int id) {
+        clients.removeIf(c -> c.getId() == id);
+    }
 }
