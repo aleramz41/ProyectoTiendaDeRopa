@@ -8,13 +8,14 @@ import com.proyectotienda.model.VentaDetalle;
 import com.proyectotienda.model.Producto;
 import com.proyectotienda.repository.IVentaDetalleRepository;
 import com.proyectotienda.repository.VentaDetalleRepository;
+import com.proyectotienda.service.IVentaDetalleService;
 import java.util.List;
 
 /**
  *
  * @author aleja
  */
-public class VentaDetalleService {
+public class VentaDetalleService implements IVentaDetalleService {
     private final IVentaDetalleRepository ventaDetalleRepository;
 
     public VentaDetalleService(VentaDetalleRepository ventaDetalleRepository) {

@@ -1,16 +1,17 @@
 
     package com.proyectotienda.service;
 
-    import java.util.List;
+import java.util.List;
 
-    import com.proyectotienda.model.Cliente;
-    import com.proyectotienda.repository.IClienteRepository;
+import com.proyectotienda.model.Cliente;
+import com.proyectotienda.repository.IClienteRepository;
+import com.proyectotienda.service.IClienteService;
 
-    /**
-     *
-     * @author aleja
-     */
-    public class ClienteService {
+/**
+ *
+ * @author aleja
+ */
+public class ClienteService implements IClienteService {
         private final IClienteRepository clienteRepository;
 
         public ClienteService(IClienteRepository clienteRepository) {
@@ -47,7 +48,3 @@
             return clienteRepository.getAllClients();
         }
     }
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */

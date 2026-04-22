@@ -8,11 +8,18 @@ import com.proyectotienda.model.Cliente;
 import com.proyectotienda.model.Producto;
 import com.proyectotienda.model.VentaDetalle;
 import com.proyectotienda.repository.ClienteRepository;
+import com.proyectotienda.repository.ProductoRepository;
 import com.proyectotienda.repository.VentaRepository;
-import com.proyectotienda.service.CalculadorTotalVenta;
+import com.proyectotienda.repository.VentaDetalleRepository;
+import com.proyectotienda.service.IClienteService;
+import com.proyectotienda.service.IProductoService;
+import com.proyectotienda.service.IVentaService;
+import com.proyectotienda.service.IVentaDetalleService;
 import com.proyectotienda.service.ClienteService;
 import com.proyectotienda.service.ProductoService;
 import com.proyectotienda.service.VentaService;
+import com.proyectotienda.service.VentaDetalleService;
+import com.proyectotienda.service.CalculadorTotalVenta;
 
 /**
  *
@@ -20,14 +27,17 @@ import com.proyectotienda.service.VentaService;
  */
 public class MainWindow extends javax.swing.JFrame {
     // Datos
-    private java.util.List<Cliente> listaClientes = new java.util.ArrayList<>();
-    private java.util.List<Producto> listaProductos = new java.util.ArrayList<>();
     private javax.swing.table.DefaultTableModel productosTableModel;
     private javax.swing.table.DefaultTableModel clientesTableModel;
     private javax.swing.table.DefaultTableModel ventasTableModel;
     private int contadorVenta = 1;
-    // Servicio para clientes
-    private final ClienteService clienteService = new ClienteService(new ClienteRepository());
+    private java.util.List<VentaDetalle> detallesVenta = new java.util.ArrayList<>();
+    private Cliente clienteVentaActual = null;
+    // Servicios
+    private final IClienteService clienteService = new ClienteService(new ClienteRepository());
+    private final IProductoService productoService = new ProductoService(new ProductoRepository());
+    private final IVentaService ventaService = new VentaService(new VentaRepository(), new CalculadorTotalVenta(), productoService);
+    private final IVentaDetalleService ventaDetalleService = new VentaDetalleService(new VentaDetalleRepository());
     /**
      * Creates new form MainWindow
      */
@@ -62,12 +72,33 @@ public class MainWindow extends javax.swing.JFrame {
         tablaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int fila = tablaClientes.getSelectedRow();
-                if (fila >= 0 && fila < listaClientes.size()) {
-                    Cliente c = listaClientes.get(fila);
-                    txtId.setText(String.valueOf(c.getId()));
-                    txtNombreCliente.setText(c.getNombre());
-                    txtEmail.setText(c.getEmail());
-                    txtTelefono.setText(c.getTelefono());
+                if (fila >= 0) {
+                    java.util.List<Cliente> allClientes = clienteService.getAllClients();
+                    if (fila < allClientes.size()) {
+                        Cliente c = allClientes.get(fila);
+                        txtId.setText(String.valueOf(c.getId()));
+                        txtNombreCliente.setText(c.getNombre());
+                        txtEmail.setText(c.getEmail());
+                        txtTelefono.setText(c.getTelefono());
+                    }
+                }
+            }
+        });
+        // Evento: llenar campos al seleccionar una fila de la tabla de productos
+        tablaProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int fila = tablaProductos.getSelectedRow();
+                if (fila >= 0) {
+                    java.util.List<Producto> allProductos = productoService.getAllProductos();
+                    if (fila < allProductos.size()) {
+                        Producto p = allProductos.get(fila);
+                        txtCodigo.setText(p.getCodigo());
+                        txtNombreProductos.setText(p.getNombre());
+                        txtTalla.setText(p.getTalla());
+                        txtColor.setText(p.getColor());
+                        txtPrecio.setText(String.valueOf(p.getPrecio()));
+                        txtCantidad.setText(String.valueOf(p.getStock()));
+                    }
                 }
             }
         });
@@ -84,6 +115,7 @@ public class MainWindow extends javax.swing.JFrame {
         tablaVentas.setModel(ventasTableModel);
         actualizarTotalVenta();
         // Asignar acciones a los botones de ventas
+        btnAgregarProductoVenta.addActionListener(this::btnAgregarProductoVentaActionPerformed);
         btnGuardarVenta.addActionListener(this::btnGuardarVentaActionPerformed);
         btnLimpiarVenta.addActionListener(this::btnLimpiarVentaActionPerformed);
     }
@@ -538,7 +570,6 @@ public class MainWindow extends javax.swing.JFrame {
             String telefono = txtTelefono.getText().trim();
             if (nombre.isEmpty() || email.isEmpty()) return;
             clienteService.registrarCliente(id, nombre, email, telefono);
-            listaClientes = clienteService.getAllClients();
             actualizarTablaClientes();
             limpiarCamposCliente();
         } catch (NumberFormatException e) {
@@ -550,17 +581,17 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void btnEliminarClientesActionPerformed(java.awt.event.ActionEvent evt) {
         int fila = tablaClientes.getSelectedRow();
-        if (fila < 0 || fila >= listaClientes.size()) return;
-        
-        Cliente c = listaClientes.get(fila);
+        if (fila < 0) return;
+        java.util.List<Cliente> allClientes = clienteService.getAllClients();
+        if (fila >= allClientes.size()) return;
+        Cliente c = allClientes.get(fila);
         clienteService.eliminarCliente(c.getId());
-        listaClientes = clienteService.getAllClients();
         actualizarTablaClientes();
         limpiarCamposCliente();
     }
 
     private void btnGuardarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnGuardarProductosActionPerformed
-        // Agregar producto de forma básica
+        // Agregar producto usando servicio
         try {
             String codigo = txtCodigo.getText().trim();
             String nombre = txtNombreProductos.getText().trim();
@@ -569,18 +600,13 @@ public class MainWindow extends javax.swing.JFrame {
             double precio = Double.parseDouble(txtPrecio.getText().trim());
             int stock = Integer.parseInt(txtCantidad.getText().trim());
             if (codigo.isEmpty() || nombre.isEmpty()) return;
-            Producto nuevo = new Producto();
-            nuevo.setCodigo(codigo);
-            nuevo.setNombre(nombre);
-            nuevo.setTalla(talla);
-            nuevo.setColor(color);
-            nuevo.setPrecio(precio);
-            nuevo.setStock(stock);
-            listaProductos.add(nuevo);
+            productoService.registrarProducto(codigo, nombre, talla, color, precio, stock);
             actualizarTablaProductos();
             limpiarCamposProducto();
         } catch (NumberFormatException e) {
             // Ignorar entrada inválida
+        } catch (IllegalArgumentException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event-btnGuardarProductosActionPerformed
 
@@ -588,52 +614,51 @@ public class MainWindow extends javax.swing.JFrame {
     private void btnEliminarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event-btnEliminarProductosActionPerformed
         // Eliminar producto seleccionado
         int fila = tablaProductos.getSelectedRow();
-        if (fila >= 0 && fila < listaProductos.size()) {
-            listaProductos.remove(fila);
-            actualizarTablaProductos();
-            limpiarCamposProducto();
-        }
+        if (fila < 0) return;
+        java.util.List<Producto> allProductos = productoService.getAllProductos();
+        if (fila >= allProductos.size()) return;
+        Producto p = allProductos.get(fila);
+        productoService.eliminarProducto(p.getCodigo());
+        actualizarTablaProductos();
+        limpiarCamposProducto();
     }//GEN-LAST:event-btnEliminarProductosActionPerformed
 
     private void btnActualizarProductosActionPerformed(java.awt.event.ActionEvent evt) {
         // Actualizar producto seleccionado
         int fila = tablaProductos.getSelectedRow();
-        if (fila >= 0 && fila < listaProductos.size()) {
-            try {
-                String codigo = txtCodigo.getText().trim();
-                String nombre = txtNombreProductos.getText().trim();
-                String talla = txtTalla.getText().trim();
-                String color = txtColor.getText().trim();
-                double precio = Double.parseDouble(txtPrecio.getText().trim());
-                int stock = Integer.parseInt(txtCantidad.getText().trim());
-                if (codigo.isEmpty() || nombre.isEmpty()) return;
-                Producto actualizado = new Producto();
-                actualizado.setCodigo(codigo);
-                actualizado.setNombre(nombre);
-                actualizado.setTalla(talla);
-                actualizado.setColor(color);
-                actualizado.setPrecio(precio);
-                actualizado.setStock(stock);
-                listaProductos.set(fila, actualizado);
-                actualizarTablaProductos();
-                limpiarCamposProducto();
-            } catch (NumberFormatException e) {
-                // Ignorar entrada inválida
-            }
+        if (fila < 0) return;
+        java.util.List<Producto> allProductos = productoService.getAllProductos();
+        if (fila >= allProductos.size()) return;
+        try {
+            String codigo = txtCodigo.getText().trim();
+            String nombre = txtNombreProductos.getText().trim();
+            String talla = txtTalla.getText().trim();
+            String color = txtColor.getText().trim();
+            double precio = Double.parseDouble(txtPrecio.getText().trim());
+            int stock = Integer.parseInt(txtCantidad.getText().trim());
+            if (codigo.isEmpty() || nombre.isEmpty()) return;
+            productoService.actualizarProducto(codigo, nombre, talla, color, precio, stock);
+            actualizarTablaProductos();
+            limpiarCamposProducto();
+        } catch (NumberFormatException e) {
+            // Ignorar entrada inválida
+        } catch (IllegalArgumentException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
 
 
     private void btnActualizarClientesActionPerformed(java.awt.event.ActionEvent evt) {
         int fila = tablaClientes.getSelectedRow();
-        if (fila < 0 || fila >= listaClientes.size()) return;
+        if (fila < 0) return;
+        java.util.List<Cliente> allClientes = clienteService.getAllClients();
+        if (fila >= allClientes.size()) return;
         try {
             int id = Integer.parseInt(txtId.getText().trim());
             String nombre = txtNombreCliente.getText().trim();
             String email = txtEmail.getText().trim();
             String telefono = txtTelefono.getText().trim();
             clienteService.actualizarCliente(id, nombre, email, telefono);
-            listaClientes = clienteService.getAllClients();
             actualizarTablaClientes();
             limpiarCamposCliente();
         } catch (NumberFormatException e) {
@@ -654,10 +679,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void txtProductoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductoVentaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event-txtProductoVentaActionPerformed
-    // Actualiza la tabla de clientes con los datos en memoria
+    // Actualiza la tabla de clientes con los datos del servicio
     private void actualizarTablaClientes() {
         clientesTableModel.setRowCount(0);
-        for (Cliente c : listaClientes) {
+        for (Cliente c : clienteService.getAllClients()) {
             clientesTableModel.addRow(new Object[]{c.getId(), c.getNombre(), c.getEmail(), c.getTelefono()});
         }
     }
@@ -670,10 +695,10 @@ public class MainWindow extends javax.swing.JFrame {
         txtTelefono.setText("");
     }
 
-    // Actualiza la tabla de productos con los datos en memoria
+    // Actualiza la tabla de productos con los datos del servicio
     private void actualizarTablaProductos() {
         productosTableModel.setRowCount(0);
-        for (Producto p : listaProductos) {
+        for (Producto p : productoService.getAllProductos()) {
             productosTableModel.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getTalla(), p.getColor(), p.getPrecio(), p.getStock()});
         }
     }
@@ -696,78 +721,81 @@ public class MainWindow extends javax.swing.JFrame {
         lblFechaVenta.setText("Fecha: " + java.time.LocalDate.now().toString());
     }
 
-    // Nueva lógica de ventas adaptada a los nuevos nombres de campos
-    private void btnGuardarVentaActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnAgregarProductoVentaActionPerformed(java.awt.event.ActionEvent evt) {
         String idCliente = txtClienteVenta.getText().trim();
         String idProducto = txtProductoVenta.getText().trim();
         String cantidadStr = txtCantidadVenta.getText().trim();
         if (idCliente.isEmpty() || idProducto.isEmpty() || cantidadStr.isEmpty()) {
-            limpiarCamposVenta();
             return;
         }
-        Cliente cliente = null;
-        for (Cliente c : listaClientes) {
-            if (String.valueOf(c.getId()).equals(idCliente)) {
-                cliente = c;
-                break;
+        if (clienteVentaActual == null) {
+            for (Cliente c : clienteService.getAllClients()) {
+                if (String.valueOf(c.getId()).equals(idCliente)) {
+                    clienteVentaActual = c;
+                    break;
+                }
             }
-        }
-        Producto producto = null;
-        for (Producto p : listaProductos) {
-            if (String.valueOf(p.getCodigo()).equals(idProducto)) {
-                producto = p;
-                break;
+            if (clienteVentaActual == null) {
+                return;
             }
         }
         int cantidad = 0;
         try {
             cantidad = Integer.parseInt(cantidadStr);
         } catch (Exception e) {
-            limpiarCamposVenta();
             return;
         }
-        if (cliente == null || producto == null) {
-            limpiarCamposVenta();
+        try {
+            VentaDetalle detalle = ventaService.crearDetalleVenta(idProducto, cantidad, "VENTA-" + contadorVenta, detallesVenta.size());
+            detallesVenta.add(detalle);
+            // Agregar a tabla
+            double total = detalle.getPrecioUnitario() * detalle.getCantidad();
+            ventasTableModel.addRow(new Object[]{contadorVenta, idCliente, detalle.getProducto().getNombre(), detalle.getPrecioUnitario(), detalle.getCantidad(), total});
+            actualizarTotalVenta();
+            // Limpiar solo producto y cantidad
+            txtProductoVenta.setText("");
+            txtCantidadVenta.setText("");
+            actualizarTablaProductos(); // Reflejar stock actualizado
+        } catch (IllegalArgumentException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (cantidad > producto.getStock() || cantidad <= 0) {
-            limpiarCamposVenta();
+    }
+
+    private void btnGuardarVentaActionPerformed(java.awt.event.ActionEvent evt) {
+        if (clienteVentaActual == null || detallesVenta.isEmpty()) {
             return;
         }
-        // Descontar stock
-        producto.setStock(producto.getStock() - cantidad);
-        double total = producto.getPrecio() * cantidad;
-        ventasTableModel.addRow(new Object[]{contadorVenta++, idCliente, producto.getNombre(), producto.getPrecio(), cantidad, total});
-        actualizarTotalVenta();
-        limpiarCamposVenta();
-        actualizarTablaProductos(); // Reflejar stock actualizado
+        String idVenta = "VENTA-" + contadorVenta++;
+        String fecha = java.time.LocalDate.now().toString();
+        try {
+            ventaService.registrarVenta(idVenta, clienteVentaActual, new java.util.ArrayList<>(detallesVenta), fecha);
+            // Limpiar después de guardar
+            txtClienteVenta.setText("");
+            txtProductoVenta.setText("");
+            txtCantidadVenta.setText("");
+            ventasTableModel.setRowCount(0);
+            detallesVenta.clear();
+            clienteVentaActual = null;
+            actualizarTotalVenta();
+            javax.swing.JOptionPane.showMessageDialog(this, "Venta guardada exitosamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        } catch (IllegalArgumentException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void btnLimpiarVentaActionPerformed(java.awt.event.ActionEvent evt) {
-        limpiarCamposVenta();
-        ventasTableModel.setRowCount(0);
-        contadorVenta = 1;
-        actualizarTotalVenta();
-    }
-
-    private void limpiarCamposVenta() {
         txtClienteVenta.setText("");
         txtProductoVenta.setText("");
         txtCantidadVenta.setText("");
+        ventasTableModel.setRowCount(0);
+        detallesVenta.clear();
+        clienteVentaActual = null;
+        actualizarTotalVenta();
     }
 
     private void actualizarTotalVenta() {
-        double total = 0.0;
-        for (int i = 0; i < ventasTableModel.getRowCount(); i++) {
-            Object val = ventasTableModel.getValueAt(i, 5);
-            if (val instanceof Number) {
-                total += ((Number) val).doubleValue();
-            } else {
-                try {
-                    total += Double.parseDouble(val.toString());
-                } catch (Exception e) {}
-            }
-        }
+        double total = ventaService.calcularTotal(new java.util.ArrayList<>(detallesVenta));
         lblTotalVenta.setText("Total ventas: $" + total);
     }
     public static void main(String args[]) {

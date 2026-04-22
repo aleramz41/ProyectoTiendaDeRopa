@@ -7,13 +7,14 @@ package com.proyectotienda.service;
 import com.proyectotienda.model.Producto;
 import com.proyectotienda.repository.IProductoRepository;
 import com.proyectotienda.repository.ProductoRepository;
+import com.proyectotienda.service.IProductoService;
 import java.util.List;
 
 /**
  *
  * @author aleja
  */
-public class ProductoService {
+public class ProductoService implements IProductoService {
     private final IProductoRepository productoRepository;
 
     public ProductoService(IProductoRepository productoRepository) {
