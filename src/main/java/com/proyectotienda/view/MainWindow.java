@@ -20,6 +20,8 @@ import com.proyectotienda.service.VentaService;
  */
 public class MainWindow extends javax.swing.JFrame {
     // Datos
+    private VentaRepository ventaRepository = new VentaRepository();
+    private VentaService ventaService = new VentaService(ventaRepository, new CalculadorTotalVenta());
     private java.util.List<Cliente> listaClientes = new java.util.ArrayList<>();
     private java.util.List<Producto> listaProductos = new java.util.ArrayList<>();
     private javax.swing.table.DefaultTableModel productosTableModel;
@@ -694,17 +696,16 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void actualizarTotalVenta() {
-        double total = 0.0;
+         java.util.ArrayList<VentaDetalle> detalles = new java.util.ArrayList<>();
         for (int i = 0; i < ventasTableModel.getRowCount(); i++) {
-            Object val = ventasTableModel.getValueAt(i, 5);
-            if (val instanceof Number) {
-                total += ((Number) val).doubleValue();
-            } else {
-                try {
-                    total += Double.parseDouble(val.toString());
-                } catch (Exception e) {}
-            }
+            double precioUnitario = ((Number) ventasTableModel.getValueAt(i, 3)).doubleValue();
+            int cantidad = ((Number) ventasTableModel.getValueAt(i, 4)).intValue();
+            VentaDetalle detalle = new VentaDetalle();
+            detalle.setPrecioUnitario(precioUnitario);
+            detalle.setCantidad(cantidad);
+            detalles.add(detalle);
         }
+        double total = ventaService.calcularTotal(detalles);
         lblTotalVenta.setText("Total ventas: $" + total);
     }
     public static void main(String args[]) {
