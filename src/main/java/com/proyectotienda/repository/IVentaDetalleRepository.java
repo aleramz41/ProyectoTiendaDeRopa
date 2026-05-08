@@ -15,6 +15,6 @@ public interface IVentaDetalleRepository {
     
     void save(VentaDetalle ventaDetalle);
     List<VentaDetalle> getAllDetalles();
-    VentaDetalle getDetalleById(String id);
-    void delete(String id);
+    VentaDetalle getDetalleById(int id);
+    void delete(int id);
 }

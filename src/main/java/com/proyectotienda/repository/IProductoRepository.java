@@ -16,7 +16,7 @@ public interface IProductoRepository {
     
     List<Producto> getAllProductos();
 
-    Producto getProductoByCodigo(String codigo);
+    Producto getProductoByCodigo(int codigo);
 
-    void deleteByCodigo(String codigo);
+    void deleteByCodigo(int codigo);
 }

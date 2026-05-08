@@ -21,8 +21,8 @@ public class ProductoService implements IProductoService {
         this.productoRepository = productoRepository;
     }
 
-    public void registrarProducto(String codigo, String nombre, String talla, String color, double precio, int stock) {
-        if (codigo == null || codigo.trim().isEmpty()) {
+    public void registrarProducto(int codigo, String nombre, String talla, String color, double precio, int stock) {
+        if (codigo < 0) {
             throw new IllegalArgumentException("El código es obligatorio.");
         }
         
@@ -46,11 +46,11 @@ public class ProductoService implements IProductoService {
         return productoRepository.getAllProductos();
     }
 
-    public Producto getProductoByCodigo(String codigo) {
+    public Producto getProductoByCodigo(int codigo) {
         return productoRepository.getProductoByCodigo(codigo);
     }
 
-    public void actualizarProducto(String codigo, String nombre, String talla, String color, double precio, int stock) {
+    public void actualizarProducto(int codigo, String nombre, String talla, String color, double precio, int stock) {
         Producto producto = getProductoByCodigo(codigo);
         if (producto == null) {
             throw new IllegalArgumentException("Producto con código " + codigo + " no encontrado.");
@@ -63,11 +63,11 @@ public class ProductoService implements IProductoService {
         producto.setStock(stock);
     }
 
-    public void eliminarProducto(String codigo) {
+    public void eliminarProducto(int codigo) {
         productoRepository.deleteByCodigo(codigo);
     }
 
-    public void descontarStock(String codigo, int cantidad) {
+    public void descontarStock(int codigo, int cantidad) {
         Producto producto = getProductoByCodigo(codigo);
         if (producto == null) {
             throw new IllegalArgumentException("Producto con código " + codigo + " no encontrado.");

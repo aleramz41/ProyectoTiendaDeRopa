@@ -17,4 +17,5 @@ public interface IClienteRepository {
     List<Cliente> getAllClients();
     void actualizarCliente(Cliente cliente);
     void eliminarCliente(int id);
+    Cliente buscarClientePorId(int id);
 }

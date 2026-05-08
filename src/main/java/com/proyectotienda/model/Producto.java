@@ -7,7 +7,7 @@ package com.proyectotienda.model;
  * @author Manuela
  */
 public class Producto {
-    private String codigo;
+    private int codigo;
     private String nombre;
     private String talla;
     private String color;
@@ -22,11 +22,11 @@ public class Producto {
         this.stock = stock;
     }
 
-    public String getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
@@ -65,7 +65,7 @@ public class Producto {
     public Producto(){
     }
     
-    public Producto(String codigo, String nombre, String talla, String color, double precio, int stock){
+    public Producto(int codigo, String nombre, String talla, String color, double precio, int stock){
         this.codigo = codigo;
         this.nombre = nombre;
         this.talla = talla;

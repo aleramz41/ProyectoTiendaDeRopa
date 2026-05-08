@@ -1,5 +1,5 @@
 
-    package com.proyectotienda.service;
+package com.proyectotienda.service;
 
 import java.util.List;
 
@@ -46,5 +46,9 @@ public class ClienteService implements IClienteService {
         }
         public List<Cliente> getAllClients() {
             return clienteRepository.getAllClients();
+        }
+        
+        public Cliente buscarClientePorId(int id) {
+            return clienteRepository.buscarClientePorId(id);
         }
     }

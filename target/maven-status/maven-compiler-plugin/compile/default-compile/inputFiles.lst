@@ -1,20 +1,26 @@
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\repository\IVentaDetalleRepository.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\view\MainWindow.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\CalculadorTotalVenta.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\repository\IClienteRepository.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\model\Producto.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\repository\VentaDetalleRepository.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\repository\VentaRepository.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\model\Cliente.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\model\VentaDetalle.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\ICalculadorTotal.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\ProductoService.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\VentaDetalleService.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\model\Ventas.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\ClienteService.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\Main.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\VentaService.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\view\DialogProductos.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\repository\ClienteRepository.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\service\ReporteService.java
-C:\Users\USUARIO\Pictures\Code\Tecn y Log\cualquier cosa\SistemaDeVentaDeRopa\src\main\java\com\proyectotienda\repository\IVentaRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/model/VentaDetalle.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/Main.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/ClienteRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/model/Cliente.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/IClienteService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/IVentaRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/VentaDetalleRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/ProductoRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/CalculadorTotalVenta.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/VentaService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/view/MainWindow.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/IProductoRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/IProductoService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/model/Producto.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/ICalculadorTotal.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/VentaDetalleService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/ProductoService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/VentaRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/IVentaDetalleService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/IClienteRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/model/Ventas.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/repository/IVentaDetalleRepository.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/IVentaService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/ClienteService.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/view/DialogProductos.java
+/home/aleja/ProyectoTiendaDeRopa/src/main/java/com/proyectotienda/service/ReporteService.java

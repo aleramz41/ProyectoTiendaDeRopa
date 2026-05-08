@@ -22,8 +22,8 @@ public class VentaDetalleService implements IVentaDetalleService {
         this.ventaDetalleRepository = ventaDetalleRepository;
     }
 
-    public void registrarDetalle(String id, Producto producto, int cantidad, double precioUnitario) {
-        if (id == null || id.trim().isEmpty()) {
+    public void registrarDetalle(int id, Producto producto, int cantidad, double precioUnitario) {
+        if (id <= 0) {
             throw new IllegalArgumentException("El ID del detalle es obligatorio.");
         }
 
@@ -47,15 +47,25 @@ public class VentaDetalleService implements IVentaDetalleService {
         return ventaDetalleRepository.getAllDetalles();
     }
 
-    public VentaDetalle getDetalleById(String id) {
+    public VentaDetalle getDetalleById(int id) {
         return ventaDetalleRepository.getDetalleById(id);
     }
 
-    public void eliminarDetalle(String id) {
+    public void eliminarDetalle(int id) {
         ventaDetalleRepository.delete(id);
     }
 
     public double calcularSubtotal(int cantidad, double precioUnitario) {
         return cantidad * precioUnitario;
+    }
+
+    @Override
+    public void registrarDetalle(String id, Producto producto, int cantidad, double precioUnitario) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public VentaDetalle getDetalleById(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

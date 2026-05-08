@@ -30,15 +30,12 @@ public class ProductoRepository implements IProductoRepository{
     }
 
     @Override
-    public Producto getProductoByCodigo(String codigo) {
-        return productos.stream()
-                .filter(p -> p.getCodigo().equals(codigo))
-                .findFirst()
-                .orElse(null);
+    public Producto getProductoByCodigo(int codigo) {
+        return productos.stream().filter(p -> p.getCodigo() == codigo).findFirst().orElse(null);
     }
 
     @Override
-    public void deleteByCodigo(String codigo) {
-        productos.removeIf(p -> p.getCodigo().equals(codigo));
+    public void deleteByCodigo(int codigo) {
+        productos.removeIf(p -> p.getCodigo() == codigo);
     }
 } 

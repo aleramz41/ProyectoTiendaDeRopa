@@ -38,8 +38,14 @@ public class ClienteRepository implements IClienteRepository{
             }
         }
     }
+    
     @Override
     public void eliminarCliente(int id) {
         clients.removeIf(c -> c.getId() == id);
+    }
+
+    @Override
+    public Cliente buscarClientePorId(int id) {
+        return clients.stream().filter(c -> c.getId() == id).findFirst().orElse(null);
     }
 }
