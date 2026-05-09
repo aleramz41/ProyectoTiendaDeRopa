@@ -36,8 +36,8 @@ que contiene las ventanas de la interfaz gráfica.
 
 Integrantes
 
-Luisa Fernanda Yaruro Briñez
-Yensen Camilo Melgarejo Pabón
-Maria Alejandra Ramirez Pineda
-John Cristian Pineda Mejía
-Manuela Jimenez Muñoz
+- Luisa Fernanda Yaruro Briñez
+- Yensen Camilo Melgarejo Pabón
+- Maria Alejandra Ramirez Pineda
+- John Cristian Pineda Mejía
+- Manuela Jimenez Muñoz
