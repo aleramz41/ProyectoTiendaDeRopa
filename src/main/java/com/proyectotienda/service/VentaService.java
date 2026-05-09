@@ -57,9 +57,15 @@ public class VentaService implements IVentaService {
 
         double total = calculadorTotal.calcularTotal(detalles);
 
+        int idVenta = contadorVenta++;
+        
+        // Asignar idVenta a todos los detalles
+        for (VentaDetalle detalle : detalles) {
+            detalle.setIdVenta(idVenta);
+        }
 
         Ventas venta = new Ventas(
-            contadorVenta++,
+            idVenta,
             cliente,
             detalles,
             total,
@@ -69,7 +75,6 @@ public class VentaService implements IVentaService {
         for (VentaDetalle detalle : detalles) {
             productoService.descontarStock(detalle.getProducto().getCodigo(),detalle.getCantidad());
         }
-
 
         ventaRepository.save(venta);
     }
@@ -109,7 +114,7 @@ public class VentaService implements IVentaService {
             throw new IllegalArgumentException("Stock insuficiente.");
         }
 
-        VentaDetalle detalle = new VentaDetalle(contadorDetalle++, producto, cantidad, producto.getPrecio());
+        VentaDetalle detalle = new VentaDetalle(contadorDetalle++, 0, producto.getCodigo(), producto, cantidad, producto.getPrecio());
         detalles.add(detalle);
 
         return detalle;

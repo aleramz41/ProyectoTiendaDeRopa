@@ -6,6 +6,8 @@ package com.proyectotienda.model;
  */
 public class VentaDetalle {
     private int id;
+    private int idVenta;
+    private int idProducto;
     private Producto producto;
     private int cantidad;
     private double precioUnitario;
@@ -13,8 +15,10 @@ public class VentaDetalle {
     public VentaDetalle() {
     }
 
-    public VentaDetalle(int id, Producto producto, int cantidad, double precioUnitario) {
+    public VentaDetalle(int id, int idVenta, int idProducto, Producto producto, int cantidad, double precioUnitario) {
         this.id = id;
+        this.idVenta = idVenta;
+        this.idProducto = idProducto;
         this.producto = producto;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
@@ -31,6 +35,22 @@ public class VentaDetalle {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIdVenta() {
+        return idVenta;
+    }
+
+    public void setIdVenta(int idVenta) {
+        this.idVenta = idVenta;
+    }
+
+    public int getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(int idProducto) {
+        this.idProducto = idProducto;
     }
 
     public Producto getProducto() {
@@ -59,6 +79,6 @@ public class VentaDetalle {
 
     @Override
     public String toString() {
-        return "VentaDetalle{" + "id=" + id + ", producto=" + producto.getNombre() + ", cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + ", subtotal=" + getSubtotal() + '}';
+        return "VentaDetalle{" + "id=" + id + ", idVenta=" + idVenta + ", idProducto=" + idProducto + ", producto=" + producto.getNombre() + ", cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + ", subtotal=" + getSubtotal() + '}';
     }
 }
