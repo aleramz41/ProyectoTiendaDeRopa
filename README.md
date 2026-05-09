@@ -17,10 +17,10 @@ Requerimientos
 
 Tecnologías
 
-Java 17
-Java Swing
-PostgreSQL (Neon)
-Maven
+- Java 17
+- Java Swing
+- PostgreSQL (Neon)
+- Maven
 
 Ejecución
 
