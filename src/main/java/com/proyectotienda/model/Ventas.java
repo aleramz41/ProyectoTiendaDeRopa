@@ -23,6 +23,13 @@ public class Ventas {
         this.fecha = fecha;
     }
 
+    public Ventas(Cliente cliente, ArrayList<VentaDetalle> detalles, double total, String fecha) {
+        this.cliente = cliente;
+        this.detalles = detalles;
+        this.total = total;
+        this.fecha = fecha;
+    }
+
     public int getId() {
         return id;
     }

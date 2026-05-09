@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IVentaRepository {
     
-    void save(Ventas venta);
+    int save(Ventas venta);
     List<Ventas> getAllVentas();
 
 }

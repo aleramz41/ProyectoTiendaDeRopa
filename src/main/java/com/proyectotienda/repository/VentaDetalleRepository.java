@@ -4,7 +4,7 @@
  */
 package com.proyectotienda.repository;
 
-//import com.proyectotienda.model.Cliente;
+import com.proyectotienda.model.Producto;
 import com.proyectotienda.model.VentaDetalle;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,17 +20,20 @@ import java.sql.SQLException;
  */
 public class VentaDetalleRepository implements IVentaDetalleRepository {
 
-    
     @Override
-    public void save(VentaDetalle detalle) {
-        String sql = "INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio) VALUES (?, ?, ?, ?)";
+    public void save(int ventaId, Producto producto, int cantidad, double precioUnitario) {
+        String sql = "INSERT INTO ventas_detalles (venta_id, producto_codigo, cantidad, precio_unitario) VALUES (?, ?, ?, ?)";
+        
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, detalle.getIdVenta());
-            stmt.setInt(2, detalle.getIdProducto());
-            stmt.setInt(3, detalle.getCantidad());
-            stmt.setDouble(4, detalle.getPrecioUnitario());
+
+            stmt.setInt(1, ventaId);
+            stmt.setInt(2, producto.getCodigo());
+            stmt.setInt(3, cantidad);
+            stmt.setDouble(4, precioUnitario);
+
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,17 +42,17 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
     @Override
     public List<VentaDetalle> getAllDetalles() {
         List<VentaDetalle> detalles = new ArrayList<>();
-        String sql = "SELECT * FROM venta_detalle";
+        String sql = "SELECT * FROM ventas_detalles";
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 VentaDetalle detalle = new VentaDetalle();
                 detalle.setId(rs.getInt("id"));
-                detalle.setIdVenta(rs.getInt("id_venta"));
-                detalle.setIdProducto(rs.getInt("id_producto"));
+                detalle.setIdVenta(rs.getInt("venta_id"));
+                detalle.setIdProducto(rs.getInt("producto_codigo"));
                 detalle.setCantidad(rs.getInt("cantidad"));
-                detalle.setPrecioUnitario(rs.getDouble("precio"));
+                detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
                 detalles.add(detalle);
             }
         } catch (SQLException e) {
@@ -57,13 +60,11 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
         }
         return detalles;
     }
-    
-    
-    @Override
 
+    @Override
     public VentaDetalle getDetalleById(int id) {
         VentaDetalle detalle = null;
-        String sql = "SELECT * FROM venta_detalle WHERE id = ?";
+        String sql = "SELECT * FROM ventas_detalles WHERE id = ?";
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -71,10 +72,10 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
                 if (rs.next()) {
                     detalle = new VentaDetalle();
                     detalle.setId(rs.getInt("id"));
-                    detalle.setIdVenta(rs.getInt("id_venta"));
-                    detalle.setIdProducto(rs.getInt("id_producto"));
+                    detalle.setIdVenta(rs.getInt("venta_id"));
+                    detalle.setIdProducto(rs.getInt("producto_codigo"));
                     detalle.setCantidad(rs.getInt("cantidad"));
-                    detalle.setPrecioUnitario(rs.getDouble("precio"));
+                    detalle.setPrecioUnitario(rs.getDouble("precio_unitario"));
                 }
             }
         } catch (SQLException e) {
@@ -82,10 +83,10 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
         }
         return detalle;
     }
-    
+
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM venta_detalle WHERE id = ?";
+        String sql = "DELETE FROM ventas_detalles WHERE id = ?";
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -94,4 +95,4 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
             e.printStackTrace();
         }
     }
-}   
+}
