@@ -41,7 +41,7 @@ public class MainWindow extends javax.swing.JFrame {
     // Repositorios compartidos
     private final ClienteRepository clienteRepository = new ClienteRepository();
     private final ProductoRepository productoRepository = new ProductoRepository();
-    private final VentaRepository ventaRepository = new VentaRepository();
+    VentaRepository ventaRepository = new VentaRepository(clienteRepository);
     private final VentaDetalleRepository ventaDetalleRepository = new VentaDetalleRepository();
 
 
@@ -786,7 +786,6 @@ public class MainWindow extends javax.swing.JFrame {
         comboClientesVenta.removeAllItems();
 
         for (Cliente cliente : clienteService.getAllClients()) {
-
             comboClientesVenta.addItem(cliente);
         }
         comboClientesVenta.setSelectedItem(null);
@@ -823,6 +822,7 @@ public class MainWindow extends javax.swing.JFrame {
     //Carga la fecha actual
     private void cargarDatosIniciales() {
         lblFechaVenta.setText("Fecha: " + java.time.LocalDate.now().toString());
+        cargarClientesCombo();
     }
     
     //Actualiza la tabla de Ventas

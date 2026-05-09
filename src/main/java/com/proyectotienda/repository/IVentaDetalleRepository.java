@@ -4,6 +4,7 @@
  */
 package com.proyectotienda.repository;
 
+import com.proyectotienda.model.Producto;
 import com.proyectotienda.model.VentaDetalle;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface IVentaDetalleRepository {
     
-    void save(VentaDetalle ventaDetalle);
+    void save(int ventaId,Producto producto,int cantidad,double precioUnitario);
     List<VentaDetalle> getAllDetalles();
 
     VentaDetalle getDetalleById(int id);

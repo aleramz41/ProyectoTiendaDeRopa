@@ -22,6 +22,19 @@ public class VentaDetalle {
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
     }
+    
+    public VentaDetalle(Producto producto,int cantidad,double precioUnitario) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+    
+    public VentaDetalle(int idProducto, Producto producto, int cantidad, double precioUnitario) {
+        this.idProducto = idProducto;
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
 
     public VentaDetalle(int id, int idVenta, int idProducto, Producto producto, int cantidad, double precioUnitario) {
         this.id = id;

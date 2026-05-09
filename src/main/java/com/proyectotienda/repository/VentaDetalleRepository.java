@@ -5,6 +5,7 @@
 package com.proyectotienda.repository;
 
 //import com.proyectotienda.model.Cliente;
+import com.proyectotienda.model.Producto;
 import com.proyectotienda.model.VentaDetalle;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,23 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
 
     
     @Override
-    public void save(VentaDetalle detalle) {
-        String sql = "INSERT INTO venta_detalle (id_venta, id_producto, cantidad, precio) VALUES (?, ?, ?, ?)";
+    public void save(int ventaId,Producto producto,int cantidad,double precioUnitario) {
+
+        String sql ="INSERT INTO ventas_detalles " + "(venta_id, producto_codigo, cantidad, precio_unitario) " + "VALUES (?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnection.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, detalle.getIdVenta());
-            stmt.setInt(2, detalle.getIdProducto());
-            stmt.setInt(3, detalle.getCantidad());
-            stmt.setDouble(4, detalle.getPrecioUnitario());
+             PreparedStatement stmt =
+                 conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, ventaId);
+            stmt.setInt(2, producto.getCodigo());
+            stmt.setInt(3, cantidad);
+            stmt.setDouble(4, precioUnitario);
+
             stmt.executeUpdate();
+
         } catch (SQLException e) {
+
             e.printStackTrace();
         }
     }
@@ -39,7 +47,7 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
     @Override
     public List<VentaDetalle> getAllDetalles() {
         List<VentaDetalle> detalles = new ArrayList<>();
-        String sql = "SELECT * FROM venta_detalle";
+        String sql = "SELECT * FROM ventas_detalles";
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {

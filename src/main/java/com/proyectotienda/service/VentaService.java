@@ -29,7 +29,6 @@ public class VentaService implements IVentaService {
     private final IClienteService clienteService;
     private final IVentaDetalleService ventaDetalleService;
     
-    private int contadorVenta = 1;
 
     public VentaService(VentaRepository ventaRepository, CalculadorTotalVenta calculadorTotal, IProductoService productoService, IClienteService clienteService, VentaDetalleService ventaDetalleService) {
         this.ventaRepository = ventaRepository;
@@ -43,23 +42,16 @@ public class VentaService implements IVentaService {
         Cliente cliente = clienteService.buscarClientePorId(idCliente);
 
         if(cliente == null){
-            throw new IllegalArgumentException(
-                "Cliente no encontrado"
-            );
+            throw new IllegalArgumentException("Cliente no encontrado");
         }
 
         if(detalles == null || detalles.isEmpty()){
-            throw new IllegalArgumentException(
-                "La venta no tiene productos"
-            );
-
+            throw new IllegalArgumentException("La venta no tiene productos");
         }
 
         double total = calculadorTotal.calcularTotal(detalles);
-        int idVenta = contadorVenta++;
 
         Ventas venta = new Ventas(
-            idVenta,
             cliente,
             detalles,
             total,
@@ -67,12 +59,15 @@ public class VentaService implements IVentaService {
         );
         
         // Guardar venta primero
-        ventaRepository.save(venta);
+        int idVenta = ventaRepository.save(venta);
+        
+        //Hacer update
         
         // Guardar detalles con su idVenta correcto
         for (VentaDetalle detalle : detalles) {
-            ventaDetalleService.registrarDetalle(idVenta, detalle.getProducto(), detalle.getCantidad(), detalle.getPrecioUnitario());
-            productoService.descontarStock(detalle.getProducto().getCodigo(), detalle.getCantidad());
+            ventaDetalleService.registrarDetalle(idVenta,detalle.getProducto(),detalle.getCantidad(),detalle.getPrecioUnitario());
+
+            productoService.descontarStock(detalle.getProducto().getCodigo(),detalle.getCantidad());
         }
     }
 
@@ -111,8 +106,8 @@ public class VentaService implements IVentaService {
             throw new IllegalArgumentException("Stock insuficiente.");
         }
 
-        // Crear detalle validado sin idVenta (se asigna en registrarVenta)
-        VentaDetalle detalle = ventaDetalleService.crearDetalleValidado(0, producto, cantidad, producto.getPrecio());
+        // Crear detalle validado sin idVenta (se hace un update a la tabla)
+        VentaDetalle detalle = new VentaDetalle( producto,cantidad,producto.getPrecio());
         detalles.add(detalle);
 
         return detalle;
