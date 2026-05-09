@@ -8,16 +8,19 @@ import com.proyectotienda.model.Cliente;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 /**
  *
  * @author aleja
  */
 public class ClienteRepository implements IClienteRepository{
+
     
     
     @Override
@@ -32,11 +35,12 @@ public class ClienteRepository implements IClienteRepository{
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
+        }}
+
 
     @Override
     public List<Cliente> getAllClients() {
+
         List<Cliente> clients = new ArrayList<>();
         String sql = "SELECT * FROM Clientes";
         try (Connection conn = DatabaseConnection.conectar();
@@ -54,10 +58,12 @@ public class ClienteRepository implements IClienteRepository{
             e.printStackTrace();
         }
         return clients;
+
     }
 
     @Override
     public void actualizarCliente(Cliente cliente) {
+
         String sql = "UPDATE Clientes SET nombre = ?, email = ?, telefono = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -81,5 +87,27 @@ public class ClienteRepository implements IClienteRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+    }
+    @Override
+    public Cliente buscarClientePorId(int id) {
+        Cliente cliente = null;
+        String sql = "SELECT * FROM Clientes WHERE id = ?";
+        try (Connection conn = DatabaseConnection.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    cliente = new Cliente();
+                    cliente.setId(rs.getInt("id"));
+                    cliente.setNombre(rs.getString("nombre"));
+                    cliente.setEmail(rs.getString("email"));
+                    cliente.setTelefono(rs.getString("telefono"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
     }
 }

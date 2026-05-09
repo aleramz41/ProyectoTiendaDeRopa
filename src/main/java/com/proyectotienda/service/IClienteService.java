@@ -11,4 +11,7 @@ public interface IClienteService {
     void actualizarCliente(int id, String nombre, String email, String telefono);
     void eliminarCliente(int id);
     List<Cliente> getAllClients();
+
+    Cliente buscarClientePorId(int id);
+
 }

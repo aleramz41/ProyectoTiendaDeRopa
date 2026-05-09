@@ -30,15 +30,14 @@ public class VentaDetalleRepository implements IVentaDetalleRepository {
     }
     
     @Override
-    public VentaDetalle getDetalleById(String id) {
-        return detalles.stream()
-                       .filter(d -> d.getId().equals(id))
-                       .findFirst()
-                       .orElse(null);
+
+    public VentaDetalle getDetalleById(int id) {
+        return detalles.stream().filter(d -> d.getId() == id).findFirst().orElse(null);
     }
     
     @Override
-    public void delete(String id) {
-        detalles.removeIf(d -> d.getId().equals(id));
+    public void delete(int id) {
+        detalles.removeIf(d -> d.getId() == id);
+
     }
 }

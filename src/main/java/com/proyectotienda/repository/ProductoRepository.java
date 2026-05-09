@@ -8,16 +8,19 @@ import com.proyectotienda.model.Producto;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 /**
  *
  * @author Windows
  */
 public class ProductoRepository implements IProductoRepository{
+
     
     
     @Override
@@ -39,6 +42,7 @@ public class ProductoRepository implements IProductoRepository{
 
     @Override
     public List<Producto> getAllProductos() {
+
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM productos";
         try (Connection conn = DatabaseConnection.conectar();
@@ -87,10 +91,12 @@ public class ProductoRepository implements IProductoRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
     public Producto getProductoByCodigo(int codigo) {
+
         String sql = "SELECT * FROM Productos WHERE codigo = ?";
     try (Connection conn = DatabaseConnection.conectar();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -111,5 +117,6 @@ public class ProductoRepository implements IProductoRepository{
         e.printStackTrace();
     }
     return null;
+
     }
 } 

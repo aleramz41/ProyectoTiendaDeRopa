@@ -3,7 +3,9 @@ package com.proyectotienda.model;
 import java.util.ArrayList;
 
 public class Ventas {
-    private String id;
+
+    private int id;
+
     private Cliente cliente;
     private ArrayList<VentaDetalle> detalles;
     private double total;
@@ -12,7 +14,8 @@ public class Ventas {
     public Ventas() {
     }
 
-    public Ventas(String id, Cliente cliente, ArrayList<VentaDetalle> detalles, double total, String fecha) {
+    public Ventas(int id, Cliente cliente, ArrayList<VentaDetalle> detalles, double total, String fecha) {
+
         this.id = id;
         this.cliente = cliente;
         this.detalles = detalles;
@@ -20,11 +23,12 @@ public class Ventas {
         this.fecha = fecha;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
+
         this.id = id;
     }
 

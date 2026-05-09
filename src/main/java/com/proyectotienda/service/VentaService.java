@@ -7,9 +7,14 @@ package com.proyectotienda.service;
 import com.proyectotienda.model.Ventas;
 import com.proyectotienda.model.VentaDetalle;
 import com.proyectotienda.model.Cliente;
+
+import com.proyectotienda.model.Producto;
 import com.proyectotienda.repository.IVentaRepository;
 import com.proyectotienda.repository.VentaRepository;
-import com.proyectotienda.service.IVentaService;
+//import com.proyectotienda.service.IVentaService;
+//import com.proyectotienda.service.IClienteService;
+//import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,28 +27,50 @@ public class VentaService implements IVentaService {
     private final ICalculadorTotal calculadorTotal;
     private final IProductoService productoService;
 
-    public VentaService(VentaRepository ventaRepository, CalculadorTotalVenta calculadorTotal, IProductoService productoService) {
+    private final IClienteService clienteService;
+    
+    private int contadorDetalle = 1;
+    private int contadorVenta = 1;
+
+    public VentaService(VentaRepository ventaRepository, CalculadorTotalVenta calculadorTotal, IProductoService productoService, IClienteService clienteService) {
         this.ventaRepository = ventaRepository;
         this.calculadorTotal = calculadorTotal;
         this.productoService = productoService;
+        this.clienteService = clienteService;
     }
 
-    public void registrarVenta(String id, Cliente cliente, ArrayList<VentaDetalle> detalles, String fecha) {
-        if (id == null || id.trim().isEmpty()) {
-            throw new IllegalArgumentException("El ID de la venta es obligatorio.");
+    public void registrarVenta(int idCliente, ArrayList<VentaDetalle> detalles) {
+        Cliente cliente = clienteService.buscarClientePorId(idCliente);
+
+        if(cliente == null){
+            throw new IllegalArgumentException(
+                "Cliente no encontrado"
+            );
         }
 
-        if (cliente == null) {
-            throw new IllegalArgumentException("El cliente es obligatorio.");
-        }
+        if(detalles == null || detalles.isEmpty()){
+            throw new IllegalArgumentException(
+                "La venta no tiene productos"
+            );
 
-        if (detalles == null || detalles.isEmpty()) {
-            throw new IllegalArgumentException("La venta debe contener al menos un producto.");
         }
 
         double total = calculadorTotal.calcularTotal(detalles);
 
-        Ventas venta = new Ventas(id, cliente, detalles, total, fecha);
+
+        Ventas venta = new Ventas(
+            contadorVenta++,
+            cliente,
+            detalles,
+            total,
+            java.time.LocalDate.now().toString()
+        );
+        
+        for (VentaDetalle detalle : detalles) {
+            productoService.descontarStock(detalle.getProducto().getCodigo(),detalle.getCantidad());
+        }
+
+
         ventaRepository.save(venta);
     }
 
@@ -55,23 +82,38 @@ public class VentaService implements IVentaService {
         return calculadorTotal.calcularTotal(detalles);
     }
 
-    public VentaDetalle crearDetalleVenta(String codigoProducto, int cantidad, String idVenta, int detalleIndex) {
-        if (codigoProducto == null || codigoProducto.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código del producto es obligatorio.");
-        }
-        if (cantidad <= 0) {
-            throw new IllegalArgumentException("La cantidad debe ser mayor a cero.");
-        }
-        var producto = productoService.getProductoByCodigo(codigoProducto);
+
+    public VentaDetalle crearDetalleVenta(List<VentaDetalle> detalles, int codigoProducto, int cantidad) {
+
+        Producto producto = productoService.getProductoByCodigo(codigoProducto);
+
         if (producto == null) {
             throw new IllegalArgumentException("Producto no encontrado.");
         }
-        if (cantidad > producto.getStock()) {
-            throw new IllegalArgumentException("Stock insuficiente para el producto: " + producto.getNombre());
+
+        VentaDetalle existente = detalles.stream().filter(d -> d.getProducto().getCodigo() == codigoProducto).findFirst().orElse(null);
+
+        if (existente != null) {
+            int nuevaCantidad = existente.getCantidad() + cantidad;
+
+            if (nuevaCantidad > producto.getStock()) {
+
+                throw new IllegalArgumentException("Stock insuficiente.");
+            }
+
+            existente.setCantidad(nuevaCantidad);
+            return existente;
         }
-        productoService.descontarStock(codigoProducto, cantidad);
-        String idDetalle = "DET-" + idVenta + "-" + detalleIndex;
-        return new VentaDetalle(idDetalle, producto, cantidad, producto.getPrecio());
+
+        if (cantidad > producto.getStock()) {
+            throw new IllegalArgumentException("Stock insuficiente.");
+        }
+
+        VentaDetalle detalle = new VentaDetalle(contadorDetalle++, producto, cantidad, producto.getPrecio());
+        detalles.add(detalle);
+
+        return detalle;
+
     }
 }
 

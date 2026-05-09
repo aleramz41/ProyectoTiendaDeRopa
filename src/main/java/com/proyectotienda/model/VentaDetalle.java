@@ -5,7 +5,7 @@ package com.proyectotienda.model;
  * @author aleja
  */
 public class VentaDetalle {
-    private String id;
+    private int id;
     private Producto producto;
     private int cantidad;
     private double precioUnitario;
@@ -13,7 +13,7 @@ public class VentaDetalle {
     public VentaDetalle() {
     }
 
-    public VentaDetalle(String id, Producto producto, int cantidad, double precioUnitario) {
+    public VentaDetalle(int id, Producto producto, int cantidad, double precioUnitario) {
         this.id = id;
         this.producto = producto;
         this.cantidad = cantidad;
@@ -25,11 +25,11 @@ public class VentaDetalle {
     }
 
     // Getters y Setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
