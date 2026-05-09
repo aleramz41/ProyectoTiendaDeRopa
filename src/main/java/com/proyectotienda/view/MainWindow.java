@@ -34,7 +34,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.table.DefaultTableModel clientesTableModel;
     private javax.swing.table.DefaultTableModel detalleVentasTableModel;
     private javax.swing.table.DefaultTableModel ventasTableModel;
-    private int contadorVenta = 1;
     private java.util.List<VentaDetalle> detallesVenta = new java.util.ArrayList<>();
     
     private Cliente clienteVentaActual = null;
@@ -49,8 +48,8 @@ public class MainWindow extends javax.swing.JFrame {
     // Servicios
     private final IClienteService clienteService = new ClienteService(clienteRepository);
     private final IProductoService productoService = new ProductoService(productoRepository);
-    private final IVentaService ventaService = new VentaService(ventaRepository, new CalculadorTotalVenta(), productoService, clienteService);
     private final IVentaDetalleService ventaDetalleService = new VentaDetalleService(ventaDetalleRepository);
+    private final IVentaService ventaService = new VentaService(ventaRepository, new CalculadorTotalVenta(), productoService, clienteService, (VentaDetalleService) ventaDetalleService);
     
     public MainWindow() {
         initComponents();
@@ -347,6 +346,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnGuardarClientes.addActionListener(this::btnGuardarClientesActionPerformed);
 
         btnActualizarClientes.setText("Actualizar");
+        btnActualizarClientes.addActionListener(this::btnActualizarClientesActionPerformed);
 
         btnEliminarClientes.setText("Eliminar");
         btnEliminarClientes.addActionListener(this::btnEliminarClientesActionPerformed);
@@ -641,8 +641,7 @@ public class MainWindow extends javax.swing.JFrame {
             String color = txtColor.getText().trim();
             double precio = Double.parseDouble(txtPrecio.getText().trim());
             int stock = Integer.parseInt(txtCantidad.getText().trim());
-            if (codigo == 0 || nombre.isEmpty()) return;
-            productoService.registrarProducto(codigo, nombre, talla, color, precio, stock);
+            productoService.registrarProducto(nombre, talla, color, precio, stock);
             actualizarTablaProductos();
             limpiarCamposProducto();
         } catch (NumberFormatException e) {

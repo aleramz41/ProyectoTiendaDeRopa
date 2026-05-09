@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface IProductoService {
 
-    void registrarProducto(int codigo, String nombre, String talla, String color, double precio, int stock);
+    void registrarProducto(String nombre, String talla, String color, double precio, int stock);
     List<Producto> getAllProductos();
     Producto getProductoByCodigo(int codigo);
     void actualizarProducto(int codigo, String nombre, String talla, String color, double precio, int stock);

@@ -68,9 +68,19 @@ public class Producto {
     
     public Producto(){
     }
+    public Producto(String nombre, String talla, String color, double precio, int stock){
+    
+
+        this.nombre = nombre;
+        this.talla = talla;
+        this.color = color;
+        this.precio = precio;
+        this.stock = stock;
+    }
     
 
     public Producto(int codigo, String nombre, String talla, String color, double precio, int stock){
+    
         this.codigo = codigo;
         this.nombre = nombre;
         this.talla = talla;

@@ -8,6 +8,7 @@ import com.proyectotienda.model.VentaDetalle;
 import com.proyectotienda.model.Producto;
 import com.proyectotienda.repository.IVentaDetalleRepository;
 import com.proyectotienda.repository.VentaDetalleRepository;
+
 //import com.proyectotienda.service.IVentaDetalleService;
 import java.util.List;
 
@@ -18,15 +19,16 @@ import java.util.List;
 public class VentaDetalleService implements IVentaDetalleService {
     private final IVentaDetalleRepository ventaDetalleRepository;
 
+
     public VentaDetalleService(VentaDetalleRepository ventaDetalleRepository) {
         this.ventaDetalleRepository = ventaDetalleRepository;
+
     }
 
 
-    public void registrarDetalle(int id, Producto producto, int cantidad, double precioUnitario) {
-        if (id <= 0) {
-
-            throw new IllegalArgumentException("El ID del detalle es obligatorio.");
+    public VentaDetalle crearDetalleValidado(int idVenta, Producto producto, int cantidad, double precioUnitario) {
+        if (idVenta <= 0) {
+            throw new IllegalArgumentException("El ID de la venta es obligatorio.");
         }
 
         if (producto == null) {
@@ -41,7 +43,11 @@ public class VentaDetalleService implements IVentaDetalleService {
             throw new IllegalArgumentException("El precio unitario no puede ser negativo.");
         }
 
-        VentaDetalle detalle = new VentaDetalle(id, producto, cantidad, precioUnitario);
+        return new VentaDetalle(idVenta, producto.getCodigo(), producto, cantidad, precioUnitario);
+    }
+
+    public void registrarDetalle(int idVenta, Producto producto, int cantidad, double precioUnitario) {
+        VentaDetalle detalle = crearDetalleValidado(idVenta, producto, cantidad, precioUnitario);
         ventaDetalleRepository.save(detalle);
     }
 
@@ -64,14 +70,6 @@ public class VentaDetalleService implements IVentaDetalleService {
     }
 
 
-    @Override
-    public void registrarDetalle(String id, Producto producto, int cantidad, double precioUnitario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
-    @Override
-    public VentaDetalle getDetalleById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 
 }
