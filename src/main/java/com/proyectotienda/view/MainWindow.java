@@ -346,6 +346,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnGuardarClientes.addActionListener(this::btnGuardarClientesActionPerformed);
 
         btnActualizarClientes.setText("Actualizar");
+        btnActualizarClientes.addActionListener(this::btnActualizarClientesActionPerformed);
 
         btnEliminarClientes.setText("Eliminar");
         btnEliminarClientes.addActionListener(this::btnEliminarClientesActionPerformed);
