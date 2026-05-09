@@ -61,6 +61,7 @@ public class ProductoService implements IProductoService {
         producto.setColor(color);
         producto.setPrecio(precio);
         producto.setStock(stock);
+        productoRepository.actualizarProducto(producto);
     }
 
 
