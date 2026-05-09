@@ -7,7 +7,8 @@ import java.util.List;
  * Interfaz para el servicio de detalles de venta.
  */
 public interface IVentaDetalleService {
-    void registrarDetalle(int id, int idVenta, com.proyectotienda.model.Producto producto, int cantidad, double precioUnitario);
+    VentaDetalle crearDetalleValidado(int idVenta, com.proyectotienda.model.Producto producto, int cantidad, double precioUnitario);
+    void registrarDetalle(int idVenta, com.proyectotienda.model.Producto producto, int cantidad, double precioUnitario);
     List<VentaDetalle> getAllDetalles();
     VentaDetalle getDetalleById(int id);
 }

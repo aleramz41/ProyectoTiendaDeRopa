@@ -26,12 +26,7 @@ public class VentaDetalleService implements IVentaDetalleService {
     }
 
 
-    public void registrarDetalle(int id, int idVenta, Producto producto, int cantidad, double precioUnitario) {
-        if (id <= 0) {
-
-            throw new IllegalArgumentException("El ID del detalle es obligatorio.");
-        }
-
+    public VentaDetalle crearDetalleValidado(int idVenta, Producto producto, int cantidad, double precioUnitario) {
         if (idVenta <= 0) {
             throw new IllegalArgumentException("El ID de la venta es obligatorio.");
         }
@@ -48,7 +43,11 @@ public class VentaDetalleService implements IVentaDetalleService {
             throw new IllegalArgumentException("El precio unitario no puede ser negativo.");
         }
 
-        VentaDetalle detalle = new VentaDetalle(id, idVenta, producto.getCodigo(), producto, cantidad, precioUnitario);
+        return new VentaDetalle(idVenta, producto.getCodigo(), producto, cantidad, precioUnitario);
+    }
+
+    public void registrarDetalle(int idVenta, Producto producto, int cantidad, double precioUnitario) {
+        VentaDetalle detalle = crearDetalleValidado(idVenta, producto, cantidad, precioUnitario);
         ventaDetalleRepository.save(detalle);
     }
 

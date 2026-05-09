@@ -15,6 +15,14 @@ public class VentaDetalle {
     public VentaDetalle() {
     }
 
+    public VentaDetalle(int idVenta, int idProducto, Producto producto, int cantidad, double precioUnitario) {
+        this.idVenta = idVenta;
+        this.idProducto = idProducto;
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+
     public VentaDetalle(int id, int idVenta, int idProducto, Producto producto, int cantidad, double precioUnitario) {
         this.id = id;
         this.idVenta = idVenta;

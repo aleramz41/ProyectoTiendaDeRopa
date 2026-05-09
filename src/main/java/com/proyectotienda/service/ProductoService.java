@@ -22,11 +22,7 @@ public class ProductoService implements IProductoService {
     }
 
 
-    public void registrarProducto(int codigo, String nombre, String talla, String color, double precio, int stock) {
-        if (codigo < 0) {
-
-            throw new IllegalArgumentException("El código es obligatorio.");
-        }
+    public void registrarProducto(String nombre, String talla, String color, double precio, int stock) {
         
         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre es obligatorio.");
@@ -40,7 +36,7 @@ public class ProductoService implements IProductoService {
             throw new IllegalArgumentException("El stock no puede ser negativo.");
         }
 
-        Producto producto = new Producto(codigo, nombre, talla, color, precio, stock);
+        Producto producto = new Producto(nombre, talla, color, precio, stock);
         productoRepository.save(producto);
     }
 

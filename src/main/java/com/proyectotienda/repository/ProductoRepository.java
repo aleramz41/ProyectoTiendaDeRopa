@@ -25,15 +25,14 @@ public class ProductoRepository implements IProductoRepository{
     
     @Override
     public void save(Producto producto) {
-        String sql = "INSERT INTO Productos (codigo, nombre, talla, color, precio, stock) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Productos (nombre, talla, color, precio, stock) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, producto.getCodigo());
-            stmt.setString(2, producto.getNombre());
-            stmt.setString(3, producto.getTalla());
-            stmt.setString(4, producto.getColor());
-            stmt.setDouble(5, producto.getPrecio());
-            stmt.setInt(6, producto.getStock());
+            stmt.setString(1, producto.getNombre());
+            stmt.setString(2, producto.getTalla());
+            stmt.setString(3, producto.getColor());
+            stmt.setDouble(4, producto.getPrecio());
+            stmt.setInt(5, producto.getStock());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
