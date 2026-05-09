@@ -5,15 +5,15 @@ Desarrollado en Java con interfaz gráfica usando Swing y base de datos PostgreS
 
 Requerimientos
 
-Registrar clientes
-Editar clientes
-Eliminar clientes
-Registrar productos
-Editar productos
-Eliminar productos
-Registrar ventas seleccionando un cliente y los productos
-Calcular el total
-Ver historial de ventas.
+- Registrar clientes
+- Editar clientes
+- Eliminar clientes
+- Registrar productos
+- Editar productos
+- Eliminar productos
+- Registrar ventas seleccionando un cliente y los productos
+- Calcular el total
+- Ver historial de ventas.
 
 Tecnologías
 
